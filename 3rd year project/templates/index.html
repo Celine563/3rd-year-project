@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SiteGuard - Check Website Safety</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+
+<body>
+    <header>
+        <img src="static/images/SiteGuard.png" class="logo">
+        <nav>
+            <a href="/">Home</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="des">
+            <h1>Check If a Website Is Safe</h1>
+            <p>Detect phishing, fake websites, and malicious URLs instantly.</p>
+
+            <form method="POST">
+                <input type="text" name="url" placeholder="Enter website URL..." required>
+                <button type="submit">Scan Website</button>
+            </form>
+            
+                <div class="result">
+                    <p>You entered: <strong>{{ url }}</strong></p>
+                </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SiteGuard. All rights reserved.</p>
+    </footer>
+</body>
+</html>
