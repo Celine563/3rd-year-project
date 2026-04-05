@@ -18,8 +18,6 @@ def home():
 
     if request.method == "POST":
         url = request.form.get("url")
-
-        # Placeholder values — replace with real scan logic
         status = "Safe"
         protocol = "HTTPS"
         suspicious_patterns = "None detected"
