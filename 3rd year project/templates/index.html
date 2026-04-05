@@ -25,15 +25,61 @@
                 <input type="text" name="url" placeholder="Enter website URL...." required>
                 <button type="submit">Scan Website</button>
             </form>
-            
-                <div class="result">
-                    <p>You entered: <strong>{{ url }}</strong></p>
-                </div>
+
+            <div id="entered-url" class="result hidden">
+                <p>You entered: <strong>{{ url }}</strong></p>
+            </div>
+        </section>
+
+        <section id="scan-results" class="scan-results hidden">
+            <h2>Scan Results</h2>
+
+            <div class="result-box safe-status">
+                <h3>You're:</h3>
+                <p><strong>{{ status }}</strong></p>
+            </div>
+
+            <div class="result-box url-check">
+                <h3>URL Check Results:</h3>
+                <ul>
+                    <li>Protocol: {{ protocol }}</li>
+                    <li>Suspicious Patterns: {{ suspicious_patterns }}</li>
+                    <li>Length Score: {{ length_score }}</li>
+                </ul>
+            </div>
+
+            <div class="result-box domain-check">
+                <h3>Domain Check Results:</h3>
+                <ul>
+                    <li>Domain Age: {{ domain_age }}</li>
+                    <li>Registration: {{ registration }}</li>
+                    <li>Blacklist Status: {{ blacklist_status }}</li>
+                </ul>
+            </div>
+
+            <div class="result-box content-check">
+                <h3>Page Content & Structure Analysis:</h3>
+                <ul>
+                    <li>Forms Detected: {{ forms }}</li>
+                    <li>External Scripts: {{ scripts }}</li>
+                    <li>Security Headers: {{ headers }}</li>
+                </ul>
+            </div>
         </section>
     </main>
 
     <footer>
         <p>&copy; 2026 SiteGuard. All rights reserved.</p>
     </footer>
+
+    <script>
+        const urlValue = "{{ url }}";
+
+        if (urlValue && urlValue.trim() !== "") {
+            document.getElementById("scan-results").classList.remove("hidden");
+            document.getElementById("entered-url").classList.remove("hidden");
+        }
+    </script>
+
 </body>
 </html>
