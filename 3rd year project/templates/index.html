@@ -3,86 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <title>SiteGuard - Check Website Safety</title>
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
 <body>
-    <header>
-        <img src="static/images/SiteGuard.png" class="logo">
-        <nav>
-            <a href="/">Home</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-        </nav>
-    </header>
+<header>
+    <img src="/static/images/SiteGuard.png" class="logo">
+    <nav>
+        <a href="/">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
 
-    <main>
-        <section class="des">
-            <h1>Check If a Website Is Safe</h1>
-            <p>Detect phishing, fake websites, and malicious URLs instantly.</p>
+<main>
+    <section class="des">
+        <h1>Check If a Website Is Safe</h1>
+        <p>Detect phishing, fake websites, and malicious URLs instantly.</p>
 
-            <form method="POST">
-                <input type="text" name="url" placeholder="Enter website URL...." required>
-                <button type="submit">Scan Website</button>
-            </form>
+        <form method="POST">
+            <input type="text" name="url" placeholder="Enter website URL..." required>
+            <button type="submit">Scan Website</button>
+        </form>
 
-            <div id="entered-url" class="result hidden">
-                <p>You entered: <strong>{{ url }}</strong></p>
-            </div>
-        </section>
+        {% if url %}
+        <div id="entered-url" class="result">
+            <p>You entered: <strong>{{ url }}</strong></p>
 
-        <section id="scan-results" class="scan-results hidden">
-            <h2>Scan Results</h2>
 
-            <div class="result-box safe-status">
-                <h3>You're:</h3>
-                <p><strong>{{ status }}</strong></p>
-            </div>
+        </div>
+        {% endif %}
+    </section>
 
-            <div class="result-box url-check">
-                <h3>URL Check Results:</h3>
-                <ul>
-                    <li>Protocol: {{ protocol }}</li>
-                    <li>Suspicious Patterns: {{ suspicious_patterns }}</li>
-                    <li>Length Score: {{ length_score }}</li>
-                </ul>
+    {% if url %}
+    <section class="scan_results">
+
+        <div class="result_box">
+            <h3>Final Score</h3>
+            <p class="risk-{{ risk_level }}">{{ final_score }}/100 — {{ risk_message }}</p>
+
+
             </div>
 
-            <div class="result-box domain-check">
-                <h3>Domain Check Results:</h3>
-                <ul>
-                    <li>Domain Name: {{ domain_name }}</li>
-                    <li>Registrar: {{ registrar }}</li>
-                    <li>Owner: {{ owner }}</li>
-                    <li>Creation Date: {{ creation_date }}</li>
-                    <li>Expiration Date: {{ expiration_date }}</li>
-                    <li>Domain Age: {{ domain_age }}</li>
-                </ul>
-            </div>
+        <div class="result_box">
+            <h3>Malicious Findings</h3>
 
-            <div class="result-box content-check">
-                <h3>Page Content & Structure Analysis:</h3>
-                <ul>
-                    <li>Forms Detected: {{ forms }}</li>
-                    <li>External Scripts: {{ scripts }}</li>
-                    <li>Security Headers: {{ headers }}</li>
-                </ul>
-            </div>
-        </section>
-    </main>
+            {% if findings %}
+                {% for title, reason in findings %}
+                    <div class="findings">
+                        <strong>{{ title }}</strong><br>
+                        <small>{{ reason }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No malicious indicators detected.</p>
+            {% endif %}
+        </div>
 
-    <footer>
-        <p>&copy; 2026 SiteGuard. All rights reserved.</p>
-    </footer>
+    
 
-    <script>
-        const urlValue = "{{ url }}";
 
-        if (urlValue && urlValue.trim() !== "") {
-            document.getElementById("scan-results").classList.remove("hidden");
-            document.getElementById("entered-url").classList.remove("hidden");
-        }
-    </script>
+    </section>
+    {% endif %}
+
+</main>
+
+<footer>
+    <p>&copy; 2026 SiteGuard. All rights reserved.</p>
+</footer>
 
 </body>
 </html>
