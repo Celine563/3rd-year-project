@@ -24,7 +24,7 @@ def findings(
             "Phishing URLs often use deep subdomains to mimic trusted brands."
         ))
 
-    if subdomain_count > 2:
+    if subdomain_count >= 6:
         findings.append((
             f"{subdomain_count} Subdomains",
             "An unusually high number of subdomains can indicate obfuscation."

@@ -30,9 +30,13 @@ def detect_obfuscation(url):
         results["long_subdomain_chain"] = True
 
     # Suspicious characters
-    for char in ["@", "-", "~", "..", "//", "#"]:
+    for char in ["@", "-", "~", "..", "#"]:
         if char in url:
             results["suspicious_chars"].append(char)
+
+    url_after_protocol = url.split("://", 1)[-1]
+    if "//" in url_after_protocol:
+        results["suspicious_chars"].append("//")
 
     # Redirect in query
     if "http" in query.lower():
