@@ -50,5 +50,22 @@ def findings(
         if domain_penalties.get("hosting_penalty", 0) != 0:
             results.append(("Risky Hosting Platform",
                             "Free or disposable hosting providers are commonly abused."))
+        if domain_penalties.get("age_penalty", 0) != 0:
+            results.append((
+                "Recently Registered Domain",
+                "Very new domains are commonly used in phishing attacks."
+            ))
+
+        if domain_penalties.get("registrar_penalty", 0) != 0:
+            results.append((
+                "Suspicious Registrar",
+                "This registrar is frequently associated with abusive or disposable domains."
+            ))
+
+        if domain_penalties.get("expiration_penalty", 0) != 0:
+            results.append((
+                "Short Registration Period",
+                "Domains expiring soon are sometimes used for temporary malicious campaigns."
+            ))    
 
     return results
