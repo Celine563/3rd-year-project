@@ -2,7 +2,6 @@ import whois as pwhois
 import dns.resolver
 import socket
 import ssl
-
 from datetime import datetime
 
 
@@ -262,6 +261,9 @@ def get_infrastructure_info(domain):
 def calculate_final_score(penalties):
     return max(100 - penalties.get("total_penalty", 0), 0)
 
+def calculate_hosting_penalty(domain):
+    return 10 if detect_hosting_platform(domain) else 0
+
 
 def run_full_analysis(domain):
 
@@ -281,6 +283,8 @@ def run_full_analysis(domain):
         infrastructure.get("ssl_error"))
 
     domain_name_penalty = calculate_domain_name_penalty(domain)
+    hosting_penalty = calculate_hosting_penalty(domain)
+
 
     penalties = {
         "age_penalty": age_penalty,
@@ -288,7 +292,8 @@ def run_full_analysis(domain):
         "registrar_penalty": registrar_penalty,
         "ssl_penalty": ssl_penalty,
         "domain_name_penalty": domain_name_penalty,
-        "total_penalty": (age_penalty + expiration_penalty + registrar_penalty + ssl_penalty + domain_name_penalty ),
+        "hosting_penalty": hosting_penalty,
+        "total_penalty": (age_penalty + expiration_penalty + registrar_penalty + ssl_penalty + domain_name_penalty + hosting_penalty ),
     }
 
     return {
