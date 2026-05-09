@@ -30,7 +30,7 @@ def detect_obfuscation(url):
         results["long_subdomain_chain"] = True
 
     # Suspicious characters
-    for char in ["@", "-", "~", "..", "#"]:
+    for char in ["%", "@", "\\", "..", "~", "#", "&", "$", "?", "=", "<", ">"]:
         if char in url:
             results["suspicious_chars"].append(char)
 
@@ -39,8 +39,14 @@ def detect_obfuscation(url):
         results["suspicious_chars"].append("//")
 
     # Redirect in query
-    if "http" in query.lower():
+    redirect_domains = [
+    "bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly",
+    "buff.ly", "rebrand.ly", "is.gd", "cutt.ly"
+]
+
+    if any(rd in hostname.lower() for rd in redirect_domains):
         results["path_redirection"] = True
+
 
     # Brand impersonation
     known_brands = [
@@ -50,7 +56,7 @@ def detect_obfuscation(url):
     ]
 
     for brand in known_brands:
-        if brand in hostname.lower() and not hostname.lower().startswith(brand):
+        if brand in hostname.lower():
             results["misleading_brand_terms"].append(brand)
 
     return results

@@ -93,10 +93,11 @@ def home():
 
         data["blacklist_result"] = blacklist_result
 
-        reputation_risk = blacklist_result.get(
-            "overall_blacklist_score", 0)
+        reputation_risk = blacklist_result.get("score", 0)
 
-        blacklist_hits = 1 if reputation_risk > 0 else 0
+
+        blacklist_hits = 1 if reputation_risk >= 40 else 0
+
 
         #Domain analysis
         domain = parsed_url.netloc.lower()
@@ -122,6 +123,8 @@ def home():
                 data["error"] = "Could not complete domain analysis"
 
         penalties = data.get("analysis_penalties", {})
+        print("HOSTING PENALTY:", penalties.get("hosting_penalty"))
+
         score = score_url(
             protocol=data.get("protocol"),
             long_subdomain_chain=data.get(
@@ -152,6 +155,14 @@ def home():
             data["risk_level"] = "malicious"
             data["risk_message"] = (
                 "This website is likely malicious.")
+            
+        print("DEBUG protocol:", data.get("protocol"))
+        print("DEBUG suspicious_chars:", data.get("suspicious_chars_obfus"))
+        print("DEBUG path_redirection:", data.get("path_redirection"))
+        print("DEBUG blacklist_hits:", blacklist_hits)
+        print("DEBUG misleading_brand_terms:", data.get("misleading_brand_terms"))
+        print("DEBUG domain_penalties:", penalties)
+
         data["findings"] = findings(
             protocol=data.get("protocol"),
             long_subdomain_chain=data.get(
