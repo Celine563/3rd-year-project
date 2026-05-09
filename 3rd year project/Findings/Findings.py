@@ -8,80 +8,52 @@ def findings(
     misleading_brand_terms,
     domain_penalties
 ):
-    findings = []
+    results = []
 
-    # Protocol
     if protocol != "https":
-        findings.append((
-            "Unsecured Protocol",
-            "The site does not use HTTPS, which makes it easier to spoof or intercept."
-        ))
+        results.append(("Unsecured Protocol",
+                        "The site does not use HTTPS, which makes it easier to spoof or intercept."))
 
-    # Subdomains
     if long_subdomain_chain:
-        findings.append((
-            "Long Subdomain Chain",
-            "Phishing URLs often use deep subdomains to mimic trusted brands."
-        ))
+        results.append(("Long Subdomain Chain",
+                        "Phishing URLs often use deep subdomains to mimic trusted brands."))
 
     if subdomain_count >= 6:
-        findings.append((
-            f"{subdomain_count} Subdomains",
-            "An unusually high number of subdomains can indicate obfuscation."
-        ))
+        results.append(("Excessive Subdomains",
+                        "An unusually high number of subdomains can indicate obfuscation."))
 
-    # Suspicious characters
     if suspicious_chars:
-        findings.append((
-            f"Suspicious Characters: {suspicious_chars}",
-            "These characters are often used in obfuscated or deceptive URLs."
-        ))
+        results.append((f"Suspicious Characters: {suspicious_chars}",
+                        "These characters can be used in deceptive or obfuscated URLs."))
 
-    # Redirection
     if path_redirection:
-        findings.append((
-            "Redirection Detected",
-            "Redirects can hide the final malicious destination."
-        ))
+        results.append(("Redirection Detected",
+                        "Redirects can hide the final malicious destination."))
 
-    # Blacklist
     if blacklist_hits > 0:
-        findings.append((
-            "Blacklist Hit",
-            "This domain appears in known threat intelligence databases."
-        ))
+        results.append(("Blacklist Hit",
+                        "This domain appears in known threat intelligence databases."))
 
-    # Misleading brand terms
     if misleading_brand_terms:
-        findings.append((
-            f"Misleading Brand Terms: {misleading_brand_terms}",
-            "Attackers often impersonate trusted brands to trick users."
-        ))
+        results.append((f"Misleading Brand Terms: {misleading_brand_terms}",
+                        "Impersonation of trusted brands is a common phishing tactic."))
 
-    # Domain penalties
     if domain_penalties:
-        if domain_penalties.get("age_penalty", 0) > 0:
-            findings.append((
-                "Very New Domain",
-                "Newly registered domains are frequently used for phishing."
-            ))
+        if domain_penalties.get("age_penalty", 0) != 0:
+            results.append(("Very New Domain", "Recently registered domains are often used for phishing."))
 
-        if domain_penalties.get("expiration_penalty", 0) > 0:
-            findings.append((
-                "Domain Expires Soon",
-                "Short‑lived domains are often used for malicious activity."
-            ))
+        if domain_penalties.get("expiration_penalty", 0) != 0:
+            results.append(("Domain Expires Soon", "Short-lived domains are commonly used in scams."))
 
-        if domain_penalties.get("registrar_penalty", 0) > 0:
-            findings.append((
-                "High‑Risk Registrar",
-                "Some registrars are commonly abused by attackers."
-            ))
+        if domain_penalties.get("registrar_penalty", 0) != 0:
+            results.append(("High-Risk Registrar", "Some registrars are frequently abused."))
 
-        if domain_penalties.get("ssl_penalty", 0) > 0:
-            findings.append((
-                "SSL Certificate Issue",
-                "Invalid or weak SSL certificates are a red flag."
-            ))
+        if domain_penalties.get("ssl_penalty", 0) != 0:
+            results.append(("SSL Certificate Issue", "Weak or invalid SSL certificates are a red flag."))
 
-    return findings
+        if domain_penalties.get("domain_name_penalty", 0) != 0:
+            results.append(("Suspicious Domain Name", "This domain matches known phishing naming patterns."))
+
+        if domain_penalties.get("hosting_penalty", 0) != 0:
+            results.append(("Risky Hosting Platform", "Free or disposable hosting providers are commonly abused."))
+    return results
