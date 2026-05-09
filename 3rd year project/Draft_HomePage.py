@@ -143,11 +143,11 @@ def home():
         data["final_score"] = score
 
         #Risk level
-        if score >= 60:
+        if score >= 85:
             data["risk_level"] = "safe"
             data["risk_message"] = "This website appears safe."
 
-        elif score >= 40:
+        elif score >= 50:
             data["risk_level"] = "caution"
             data["risk_message"] = (
                 "This website contains suspicious indicators.")
