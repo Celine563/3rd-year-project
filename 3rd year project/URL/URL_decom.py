@@ -6,10 +6,13 @@ def decompose_url(url):
     hostname = parsed.hostname or ""
     host_parts = hostname.split(".")
 
-    #Extracts domain & TLD
+    # extract domain & TLD
     domain = host_parts[-2] if len(host_parts) >= 2 else ""
     tld = host_parts[-1] if len(host_parts) >= 1 else ""
-    subdomains = host_parts[:-2] if len(host_parts) > 2 else []
+
+    subdomains = []
+    if len(host_parts) > 2:
+        subdomains = host_parts[:-2]
 
     decomposition = {
         "scheme": parsed.scheme,
@@ -17,10 +20,10 @@ def decompose_url(url):
         "subdomains": subdomains,
         "domain": domain,
         "tld": tld,
-        "path": parsed.path if parsed.path else "/",
+        "path": parsed.path or "/",
         "query_params": parse_qs(parsed.query),
         "fragment": parsed.fragment,
-        "port": parsed.port
+        "port": parsed.port,
     }
 
     return decomposition

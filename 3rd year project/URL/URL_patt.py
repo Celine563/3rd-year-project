@@ -16,34 +16,40 @@ def url_pattern_analysis(url):
         "url_length": len(url)
     }
 
-    #Suspicious keywords
+    url_lower = url.lower()
+
+    # suspicious keywords
     keyword_list = [
         "login", "verify", "secure", "update", "confirm",
         "account", "billing", "password", "reset"
     ]
+
     for kw in keyword_list:
-        if kw in url.lower():
+        if kw in url_lower:
             results["suspicious_keywords"].append(kw)
 
-    #Risky TLDs
+    # risky TLDs
     risky_tlds = [
         "zip", "xyz", "top", "gq", "ml", "cf", "tk", "work",
         "click", "country", "stream", "download"
     ]
-    tld = hostname.split(".")[-1].lower()
+
+    tld = hostname.split(".")[-1].lower() if hostname else ""
     if tld in risky_tlds:
         results["risky_tld"] = True
 
-    #Encoded characters 
+    # encoded characters
     if "%" in path:
         results["encoded_chars_in_path"] = True
 
-    #Multiple subdirectories 
-    segments = [seg for seg in path.split("/") if seg]
+    # multiple subdirectories
+    segments = path.split("/")
+    segments = [s for s in segments if s]
+
     if len(segments) >= 4:
         results["multiple_subdirectories"] = True
 
-    #Suspicious querys
+    # suspicious query params
     suspicious_params = ["redirect", "url", "next", "dest", "continue"]
     query_dict = parse_qs(query)
 

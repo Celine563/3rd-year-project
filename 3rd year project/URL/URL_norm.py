@@ -4,22 +4,22 @@ import idna
 def normalise_url(url):
     try:
         parsed = urlparse(url)
-    except:
+    except Exception:
         return None
 
-    #Reject invalid schemes
-    if parsed.scheme not in ["http", "https"]:
+    # reject invalid schemes
+    if parsed.scheme not in ("http", "https"):
         return None
 
-    #Must have a hostname
+    # must have a hostname
     if not parsed.hostname:
         return None
 
-    #Reject whitespace or backslashes
+    # quick sanity check for obvious junk
     if " " in url or "\\" in url:
         return None
 
-    #Hostname must contain at least one dot
+    # hostname must contain at least one dot
     if "." not in parsed.hostname:
         return None
 
@@ -29,14 +29,16 @@ def normalise_url(url):
     except idna.IDNAError:
         return None
 
-    #Path
-    path = parsed.path or "/"
+    path = parsed.path
+    if not path:
+        path = "/"
 
-    #Sort query parameters
+    #sort query params 
     query_dict = parse_qs(parsed.query)
-    sorted_query = "&".join(f"{k}={v[0]}" for k, v in sorted(query_dict.items()))
+    sorted_query = "&".join(
+        f"{k}={v[0]}" for k, v in sorted(query_dict.items())
+    )
 
-    #Reconstruct normalized URL
     normalized_url = urlunparse((
         parsed.scheme.lower(),
         hostname,

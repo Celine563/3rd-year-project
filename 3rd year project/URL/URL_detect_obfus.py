@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 def detect_obfuscation(url):
     parsed = urlparse(url)
+
     hostname = parsed.hostname or ""
     query = parsed.query or ""
 
@@ -15,38 +16,41 @@ def detect_obfuscation(url):
         "misleading_brand_terms": []
     }
 
-    # Unicode
+    # Unicode check
     try:
         ascii_domain = idna.encode(hostname).decode()
-        if ascii_domain != hostname:
-            results["unicode_mixed_script"] = True
-    except:
+        results["unicode_mixed_script"] = ascii_domain != hostname
+    except Exception:
         results["unicode_mixed_script"] = True
 
-    # Subdomains
-    subdomains = hostname.split(".")
+    # Subdomains 
+    subdomains = hostname.split(".") if hostname else []
     results["subdomain_count"] = len(subdomains)
+
     if len(subdomains) >= 5:
         results["long_subdomain_chain"] = True
 
     # Suspicious characters
-    for char in ["%", "@", "\\", "..", "~", "#", "&", "$", "?", "=", "<", ">"]:
+    suspicious_list = ["%", "@", "\\", "..", "~", "#", "&", "$", "?", "=", "<", ">"]
+
+    for char in suspicious_list:
         if char in url:
             results["suspicious_chars"].append(char)
 
+    # extra check for double slash in path 
     url_after_protocol = url.split("://", 1)[-1]
     if "//" in url_after_protocol:
         results["suspicious_chars"].append("//")
 
-    # Redirect in query
+    # Redirect shorteners
     redirect_domains = [
-    "bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly",
-    "buff.ly", "rebrand.ly", "is.gd", "cutt.ly"
-]
+        "bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly",
+        "buff.ly", "rebrand.ly", "is.gd", "cutt.ly"
+    ]
 
-    if any(rd in hostname.lower() for rd in redirect_domains):
+    hostname_lower = hostname.lower()
+    if any(rd in hostname_lower for rd in redirect_domains):
         results["path_redirection"] = True
-
 
     # Brand impersonation
     known_brands = [
@@ -56,7 +60,7 @@ def detect_obfuscation(url):
     ]
 
     for brand in known_brands:
-        if brand in hostname.lower():
+        if brand in hostname_lower:
             results["misleading_brand_terms"].append(brand)
 
     return results

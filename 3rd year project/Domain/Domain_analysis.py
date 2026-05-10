@@ -318,13 +318,13 @@ def calculate_dns_infra_penalty(
 
     elif bad_asn_hosting == "cheap_shared_hosting":
         penalty -= 4
-# Bad ASN / Hosting
+
     if dns_instability == "rapid_changes":
         penalty -= 5
-# DNS Instability
+
     elif dns_instability == "moderate_changes":
         penalty -= 2
-# Geo Mismatch
+
     if geo_mismatch:
         penalty -= 5
 
@@ -335,6 +335,7 @@ def calculate_domain_cert_penalty(domain_age, suspicious_name, tls_issues,regist
 
     penalty = 0
 
+    #Domain Age
     if domain_age < 7:
         penalty -= 15
 
@@ -344,6 +345,7 @@ def calculate_domain_cert_penalty(domain_age, suspicious_name, tls_issues,regist
     elif domain_age <= 180:
         penalty -= 5
 
+    #Suspicious Domain Name
     if suspicious_name == "typosquatting_homoglyphs":
         penalty -= 5
 
@@ -353,6 +355,7 @@ def calculate_domain_cert_penalty(domain_age, suspicious_name, tls_issues,regist
     elif suspicious_name == "slightly_suspicious":
         penalty -= 2
 
+    #TLS Issues
     if tls_issues == "no_https":
         penalty -= 7
 
@@ -362,6 +365,7 @@ def calculate_domain_cert_penalty(domain_age, suspicious_name, tls_issues,regist
     elif tls_issues == "weak_short_cert":
         penalty -= 3
 
+    #Registrar Risk
     if registrar_risk == "high_risk":
         penalty -= 6
 
